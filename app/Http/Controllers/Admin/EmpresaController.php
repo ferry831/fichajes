@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class EmpresaController extends Controller
 {
@@ -11,7 +12,8 @@ class EmpresaController extends Controller
      */
     public function index()
     {
-        
+        $empresas = \App\Models\Empresa::all();
+        return view('admin.empresas.index', compact('empresas'));
     }
 
     /**
@@ -19,7 +21,7 @@ class EmpresaController extends Controller
      */
     public function create()
     {
-        
+        return view('admin.empresas.create');
     }
 
     /**

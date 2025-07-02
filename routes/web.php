@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\TrabajadorController;
 use App\Http\Controllers\EmpresaController;
+use App\Http\Controllers\Admin\EmpresaController as AdminEmpresaController;
 
 // Página de inicio pública
 Route::get('/', function () {
@@ -21,13 +22,25 @@ Route::middleware(['auth'])->get('/dashboard', function () {
 // Redirección automática tras login según perfil
 Route::middleware(['auth'])->get('/redirect', function () {
     return match (auth()->user()->perfil) {
-        'administrador' => redirect()->route('admin.dashboard'),
+        'admin' => redirect()->route('admin.empresas.index'),
         'empresa' => redirect()->route('empresa.dashboard'),
         'trabajador' => redirect()->route('trabajador.dashboard'),
         default => abort(403),
     };
 });
 
+
+
+// Para el admin:
+Route::prefix('admin')->name('admin.')
+->middleware(['auth', CheckPerfil::class . ':admin'])
+->group(function () {
+    Route::resource('empresas', AdminEmpresaController::class);
+});
+
+// Para la empresa (jefe):
+Route::resource('empresa', EmpresaController::class)
+->middleware('auth', CheckPerfil::class . ':empresa');
 
 Route::resource('trabajador', TrabajadorController::class)->middleware('auth');
 Route::resource('empresa', EmpresaController::class)->middleware('auth');
@@ -49,7 +62,7 @@ Route::middleware(['auth', CheckPerfil::class . ':trabajador'])->group(function 
 });
 
 // Panel administrador
-Route::middleware(['auth', CheckPerfil::class . ':administrador'])->group(function () {
+Route::middleware(['auth', CheckPerfil::class . ':admin'])->group(function () {
     Route::get('/admin', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');

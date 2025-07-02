@@ -13,9 +13,16 @@
                 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
+                    @auth
+                        @if(Auth::user()->perfil === 'admin')
+                            <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                                {{ __('Admin') }}
+                            </x-nav-link>
+                            <x-nav-link :href="route('admin.empresas.index')" :active="request()->routeIs('admin.empresas.*')">
+                                {{ __('Empresas') }}
+                            </x-nav-link>
+                        @endif
+                    @endauth
                 </div>
             </div>
 

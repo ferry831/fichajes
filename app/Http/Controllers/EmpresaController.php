@@ -11,15 +11,15 @@ class EmpresaController extends Controller
      */
     public function index()
     {
-        
-    }
 
+    }
+   
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        
+        return view('empresas.create');
     }
 
     /**
@@ -27,7 +27,7 @@ class EmpresaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
     }
 
     /**

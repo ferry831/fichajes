@@ -10,10 +10,21 @@ class EmpresaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $empresas = \App\Models\Empresa::all();
-        return view('admin.empresas.index', compact('empresas'));
+        $nombre = $request->input('nombre');
+        $cif = $request->input('cif');
+        $empresas = \App\Models\Empresa::when($nombre, function($query, $nombre) {
+            return $query->where('nombre', 'like', "%{$nombre}%");
+        })->when($cif, function($query, $cif) {
+            return $query->where('cif', 'like', "%{$cif}%");
+        })
+        ->paginate(15);
+
+     
+        
+
+        return view('admin.empresas.index', compact('empresas', 'nombre', 'cif'));
     }
 
     /**

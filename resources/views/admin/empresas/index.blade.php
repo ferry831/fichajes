@@ -11,8 +11,15 @@
             <div class=" flex items-right justify-between mb-4">
                 <a href="{{ route('admin.empresas.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Añadir Empresa</a>
             </div>
-        </div>
+            <div class="mb-4">
+                <form method="GET" action="{{ route('admin.empresas.index') }}" class="flex items-center space-x-2">
+                    <input type="text" name="nombre" value="{{ request('nombre') }}" placeholder="Buscar por Nombre..." class="border border-gray-300 rounded-lg px-4 py-2 w-full" />
+                    <input type="text" name="cif" value="{{ request('cif') }}" placeholder="Buscar por CIF..." class="border border-gray-300 rounded-lg px-4 py-2 w-full" />
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Buscar</button>
+                </form>
+            </div>
         <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+            
             <table class="min-w-full divide-y divide-gray-400">
                 <thead class="bg-gray-100">
                     <tr>
@@ -39,6 +46,9 @@
                     @endforeach
                 </tbody>
             </table>
+        </div>
+        <div class="mt-4">
+            {{ $empresas->links() }}
         </div>
     </div>
 </x-app-layout>

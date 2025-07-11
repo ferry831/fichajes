@@ -8,13 +8,16 @@ return new class extends Migration {
     {
         Schema::create('empresas', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
-            $table->string('cif')->nullable();
+            $table->string('razon_social')->unique();
+            $table->string('cif')->unique();
             $table->string('direccion')->nullable();
-            $table->string('telefono')->nullable();
-            $table->string('logo')->nullable();
+            $table->string('ccc')->nullable();
+            $table->boolean('activa')->default(true);
+            $table->unsignedBigInteger('user_id')->unique();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
+
     }
 
     public function down(): void

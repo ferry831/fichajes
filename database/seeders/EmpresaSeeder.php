@@ -12,12 +12,14 @@ class EmpresaSeeder extends Seeder
      */
     public function run(): void
     {
-         \App\Models\Empresa::create([
-        'nombre' => 'Nombre de la empresa',
-        'cif' => 'CIF123456',
-        'direccion' => 'Dirección ejemplo',
-        'telefono' => '123456789',
-        'logo' => null,
-    ]);
+        $user = \App\Models\User::factory()->create();
+        \App\Models\Empresa::create([
+            'razon_social' => 'Nombre de la empresa',
+            'cif' => 'CIF123456',
+            'direccion' => 'Dirección ejemplo',
+            'ccc' => '12345678901', // o el campo correcto
+            'activa' => true,
+            'user_id' => $user->id,
+        ]);
     }
 }

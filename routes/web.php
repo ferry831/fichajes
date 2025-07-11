@@ -38,6 +38,10 @@ Route::prefix('admin')->name('admin.')
     Route::resource('empresas', AdminEmpresaController::class);
 });
 
+// Ruta para cambiar el estado de una empresa (dar de alta/baja)
+Route::patch('admin/empresas/{empresa}/toggle-active', [AdminEmpresaController::class, 'cambiarEstado'])
+    ->name('admin.empresas.cambiarEstado');
+
 // Para la empresa (jefe):
 Route::resource('empresa', EmpresaController::class)
 ->middleware('auth', CheckPerfil::class . ':empresa');
@@ -46,8 +50,6 @@ Route::resource('trabajador', TrabajadorController::class)->middleware('auth');
 Route::resource('empresa', EmpresaController::class)->middleware('auth');
 
 // Panel empresa
-
-
 Route::middleware(['auth', CheckPerfil::class . ':empresa'])->group(function () {
     Route::get('/empresa', function () {
         return view('empresa.dashboard');

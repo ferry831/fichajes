@@ -17,11 +17,14 @@ class EmpresaFactory extends Factory
     public function definition(): array
     {
         return [
-            'nombre' => $this->faker->company,
-            'cif' => strtoupper($this->faker->bothify('??########')),
+            'razon_social' => $this->faker->company,
+            'cif' => strtoupper($this->faker->bothify('?#######')),
             'direccion' => $this->faker->streetAddress,
-            'telefono' => $this->faker->numerify($this->faker->randomElement(['6########', '7########', '9########'])),
-            'logo' => null,
+            'ccc' => $this->faker->numerify('###########'),
+            'activa' => false, // 80% chance of being true
+            'user_id' => \App\Models\User::factory(), 
         ];
+
+        
     }
 }

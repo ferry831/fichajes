@@ -8,12 +8,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Empresa extends Model
 {
     use HasFactory;
-     protected $fillable = [
-        'nombre', 'cif', 'direccion', 'telefono', 'logo'
+
+    protected $fillable = [
+        'razon_social', 'cif', 'direccion', 'ccc', 'pin', 'activa', 'user_id'
     ];
 
-    public function trabajadores()
-    {
-        return $this->hasMany(Trabajador::class);
+    public function usuario() {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

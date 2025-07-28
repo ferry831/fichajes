@@ -75,7 +75,7 @@
                         @endif
 
                     </div>
-                  
+
                     <div class="flex justify-end space-x-2">
                         <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Añadir Empresa</button>
                         <a href="{{ route('admin.empresas.index') }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Cancelar</a>

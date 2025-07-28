@@ -27,20 +27,8 @@
                 <div class="mb-4">
                     <strong>Administrador de la empresa:</strong> {{ $empresa->administrador->email }}
                 </div>
-
                 <div class="mt-6 flex justify-end space-x-2">
-                    <a href="{{ route('admin.empresas.edit', $empresa) }}" class="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700">Editar</a>
-
-                    <form action="{{ route('admin.empresas.cambiarEstado', $empresa) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que quieres dar de baja a esta empresa?')">
-                        @csrf
-                        @method('PATCH')
-                        @if ($empresa->activa)
-                            <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Dar de baja</button>
-                        @else
-                            <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Dar de alta</button>
-                        @endif
-                    </form>
-                    <a href="{{ route('admin.empresas.index') }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Volver a la lista</a>
+                    <a href="{{ route('empresa.info.edit', $empresa) }}" class="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700">Editar</a>
                 </div>
             </div>
         </div>

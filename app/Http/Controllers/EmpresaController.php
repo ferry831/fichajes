@@ -11,7 +11,7 @@ class EmpresaController extends Controller
      */
     public function index()
     {
-
+        //
     }
    
     /**
@@ -31,27 +31,45 @@ class EmpresaController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified resource (empresa del usuario autenticado).
      */
-    public function show(string $id)
+    public function show()
     {
-        //
+        $empresa = auth()->user()->empresaAdministrada;//devuelve la empresa del usuario autenticado
+        return view('empresa.info.show', [
+            'empresa' => $empresa
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
 
     /**
-     * Update the specified resource in storage.
+     * Show the form for editing the empresa del usuario autenticado.
      */
-    public function update(Request $request, string $id)
+    public function edit()
     {
-        //
+        $empresa = auth()->user()->empresaAdministrada;
+        //$tiempo_actual = time() + 3600*2;
+        return view('empresa.info.edit', [
+            'empresa' => $empresa,
+        // 'tiempo_actual' => $tiempo_actual
+        ]);
+    }
+
+
+    /**
+     * Update the empresa del usuario autenticado.
+     */
+    public function update(Request $request)
+    {
+        $empresa = auth()->user()->empresaAdministrada; 
+        $validated = $request->validate([
+            'razon_social' => 'required|string|max:255',
+            'cif' => 'required|string|min:9|max:9',
+            'ccc' => 'required|string|min:11|max:11',
+            'direccion' => 'nullable|string|max:255',
+        ]);
+        $empresa->update($validated);
+        return redirect()->route('empresa.info.show')->with('success', 'Información actualizada correctamente.');
     }
 
     /**

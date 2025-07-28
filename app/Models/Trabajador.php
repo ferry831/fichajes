@@ -3,11 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Trabajador extends Model
 {
+    use HasFactory;
+    use SoftDeletes;
+
+    protected $table = 'trabajadores';
+
     protected $fillable = [
-        'empresa_id', 'nombre', 'apellidos', 'email', 'nif', 'pin'
+        'empresa_id', 'nombre', 'email', 'nif', 'pin', 'horas', 'user_id'
     ];
 
     public function empresa()

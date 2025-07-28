@@ -22,9 +22,7 @@ class EmpresaFactory extends Factory
             'direccion' => $this->faker->streetAddress,
             'ccc' => $this->faker->numerify('###########'),
             'activa' => false, // 80% chance of being true
-            'user_id' => \App\Models\User::factory(), 
-        ];
-
-        
+            'user_id' => \App\Models\User::factory()->state(['perfil' => 'empresa']),
+        ];        
     }
 }

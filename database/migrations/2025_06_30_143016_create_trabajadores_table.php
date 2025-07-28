@@ -9,12 +9,16 @@ return new class extends Migration {
         Schema::create('trabajadores', function (Blueprint $table) {
             $table->id();
             $table->foreignId('empresa_id')->constrained('empresas')->onDelete('cascade');
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade'); // <-- Añade esta línea
             $table->string('nombre');
-            $table->string('apellidos');
             $table->string('email')->unique();
+            $table->integer('horas')->nullable();
             $table->string('nif')->nullable();
             $table->string('pin')->nullable();
             $table->timestamps();
+            $table->softDeletes();
+
+            $table->unique(['empresa_id', 'nif'], 'unique_empresa_nif');
         });
     }
 

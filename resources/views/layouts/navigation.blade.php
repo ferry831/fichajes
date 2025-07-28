@@ -20,6 +20,37 @@
                             </x-nav-link>
                         @endif
                     @endauth
+                    @auth
+                        @if(Auth::user()->perfil === 'empresa')
+                            <x-nav-link :href="route('empresa.dashboard')" :active="request()->routeIs('empresa.dashboard')">
+                                {{ __('Dashboard Empresa') }}
+                            </x-nav-link>
+                            <x-nav-link :href="route('empresa.info.show')" :active="request()->routeIs('empresa.info.*')">
+                                {{ __('Información Empresa') }}
+                            </x-nav-link>
+                             <x-nav-link :href="route('empresa.trabajadores.index')" :active="request()->routeIs('empresa.trabajadores.index')">
+                                {{ __('Trabajadores') }}
+                            </x-nav-link>
+                            <x-nav-link :href="route('empresa.info.show')" :active="request()->routeIs('empresa.info.*')">
+                                {{ __('Fichajes') }}
+                            </x-nav-link>
+                            <x-nav-link :href="route('empresa.info.show')" :active="request()->routeIs('empresa.info.*')">
+                                {{ __('Incidencias') }}
+                            </x-nav-link>
+                        @endif
+                    @endauth
+                    @auth
+                        @if(Auth::user()->perfil === 'trabajador')
+                            <x-nav-link :href="route('trabajador.dashboard')" :active="request()->routeIs('trabajador.dashboard')">
+                                {{ __('Dashboard Trabajador') }}
+                            </x-nav-link>
+                            <x-nav-link :href="route('trabajador.fichajes.index')" :active="request()->routeIs('trabajador.fichajes.*')">
+                                {{ __('Fichajes') }}
+                            </x-nav-link>
+                         
+                        @endif
+                    @endauth
+
                 </div>
             </div>
 

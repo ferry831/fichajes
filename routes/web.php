@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\TrabajadorController;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\Admin\EmpresaController as AdminEmpresaController;
+use App\Http\Controllers\FichajeController;
 
 // Página de inicio pública
 Route::get('/', function () {
@@ -16,7 +17,7 @@ Route::get('/', function () {
 
 
 Route::middleware(['auth'])->get('/dashboard', function () {
-    return view('dashboard');
+    return redirect()->route('redirect');
 })->name('dashboard');
 
 // Redirección automática tras login según perfil
@@ -27,9 +28,7 @@ Route::middleware(['auth'])->get('/redirect', function () {
         'trabajador' => redirect()->route('trabajador.dashboard'),
         default => abort(403),
     };
-});
-
-
+})->name('redirect');
 
 // Para el admin:
 Route::prefix('admin')->name('admin.')
@@ -42,26 +41,49 @@ Route::prefix('admin')->name('admin.')
 Route::patch('admin/empresas/{empresa}/toggle-active', [AdminEmpresaController::class, 'cambiarEstado'])
     ->name('admin.empresas.cambiarEstado');
 
-// Para la empresa (jefe):
-Route::resource('empresa', EmpresaController::class)
-->middleware('auth', CheckPerfil::class . ':empresa');
+// Panel empresa y gestión de recursos de empresa
+Route::prefix('empresa')
+    ->name('empresa.')
+    ->middleware(['auth', CheckPerfil::class . ':empresa'])
+    ->group(function () {
+        // Dashboard empresa
+        Route::get('/', function () {
+            return view('empresa.dashboard');
+        })->name('dashboard');
 
-Route::resource('trabajador', TrabajadorController::class)->middleware('auth');
-Route::resource('empresa', EmpresaController::class)->middleware('auth');
 
-// Panel empresa
-Route::middleware(['auth', CheckPerfil::class . ':empresa'])->group(function () {
-    Route::get('/empresa', function () {
-        return view('empresa.dashboard');
-    })->name('empresa.dashboard');
-});
+        // Información de la empresa (ver, editar, actualizar)
+        Route::get('info', [EmpresaController::class, 'show'])->name('info.show');
+        Route::get('info/editar', [EmpresaController::class, 'edit'])->name('info.edit');
+        Route::put('info', [EmpresaController::class, 'update'])->name('info.update');
+
+        // Gestión de trabajadores (RESTful, anidado)
+        Route::resource('trabajadores', TrabajadorController::class);
+
+        // Fichajes de un trabajador (RESTful anidado)
+        Route::get('trabajadores/{trabajador}/fichajes', [FichajeController::class, 'index'])->name('trabajadores.fichajes.index');
+        Route::get('trabajadores/{trabajador}/fichajes/{fichaje}/editar', [FichajeController::class, 'edit'])->name('trabajadores.fichajes.edit');
+        Route::put('trabajadores/{trabajador}/fichajes/{fichaje}', [FichajeController::class, 'update'])->name('trabajadores.fichajes.update');
+        Route::delete('trabajadores/{trabajador}/fichajes/{fichaje}', [FichajeController::class, 'destroy'])->name('trabajadores.fichajes.destroy');
+
+        // // (Opcional) Incidencias/solicitudes de regularización
+        // Route::get('incidencias', [IncidenciaController::class, 'index'])->name('incidencias.index');
+        // Route::post('incidencias/{id}/resolver', [IncidenciaController::class, 'resolver'])->name('incidencias.resolver');
+    });
+
 
 // Panel trabajador
 Route::middleware(['auth', CheckPerfil::class . ':trabajador'])->group(function () {
-    Route::get('/trabajador', function () {
-        return view('trabajador.dashboard');
-    })->name('trabajador.dashboard');
+    Route::get('/trabajador', [TrabajadorController::class, 'dashboard'])->name('trabajador.dashboard');
 });
+
+Route::get('/trabajador/fichajes', [FichajeController::class, 'index'])->name('trabajador.fichajes.index');
+
+// Rutas de fichajes para el trabajador
+Route::post('/fichajes/entrada', [FichajeController::class, 'entrada'])->name('fichajes.entrada');
+Route::post('/fichajes/salida/{id}', [FichajeController::class, 'salida'])->name('fichajes.salida');
+Route::post('/fichajes/reanudar/{id}', [FichajeController::class, 'reanudar'])->name('fichajes.reanudar');
+Route::post('/fichajes/pausa/{id}', [FichajeController::class, 'pausa'])->name('fichajes.pausa');
 
 // Panel administrador
 Route::middleware(['auth', CheckPerfil::class . ':admin'])->group(function () {

@@ -5,6 +5,7 @@
         </h2>
     </x-slot>
 
+    
 
     <div class="py-6">
         <div class="max-w-7xl mx-auto min-w-full px-4 sm:px-5 lg:px-5">
@@ -74,6 +75,7 @@
                                         -
                                     @endif
                                 </td>
+                                
                             </tr>
                         @endforeach
                     </tbody>

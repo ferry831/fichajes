@@ -6,6 +6,35 @@
         </h2>
     </x-slot>
 
+    @if(session('success'))
+        <div id="success-banner" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div id="error-banner" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                const successBanner = document.getElementById('success-banner');
+                const errorBanner = document.getElementById('error-banner');
+                if (successBanner) {
+                    successBanner.style.display = 'none';
+                }
+                if (errorBanner) {
+                    errorBanner.style.display = 'none';
+                }
+            }, 3000);
+        });
+    </script>
+
+
+
     <div class="py-12">
     <div class="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4 lg:max-w-7xl mx-auto sm:px-6 lg:px-8 items-center">
         

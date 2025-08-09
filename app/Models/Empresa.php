@@ -12,7 +12,7 @@ class Empresa extends Model
     use HasFactory;
 
     protected $fillable = [
-        'razon_social', 'cif', 'direccion', 'ccc', 'pin', 'activa', 'user_id'
+        'razon_social', 'cif', 'direccion', 'ccc', 'activa', 'user_id'
     ];
 
     public function administrador() {

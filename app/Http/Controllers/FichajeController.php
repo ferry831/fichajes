@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Trabajador;
 use App\Models\Fichaje;
 use App\Models\Pausa;
+use App\Models\Empresa;
 
 class FichajeController extends Controller
 {
@@ -20,8 +21,36 @@ class FichajeController extends Controller
 
     }
 
+    public function indexEmpresa()
+    {
+        $empresa = Empresa::where('user_id', auth()->id())->first(); // Obtiene la empresa asociada al usuario autenticado
+        $empleadosSemana = $empresa->trabajadores()->with(['fichajes' => function($q) {
+            $q->whereBetween('fecha', [now()->startOfWeek(), now()->endOfWeek()]);
+        }])->get();
+
+        $empleadosMes = $empresa->trabajadores()->with(['fichajes' => function($q) {
+            $q->whereMonth('fecha', now()->month)
+            ->whereYear('fecha', now()->year);
+        }])->get();
+
+
+        return view('empresa.fichajes.index', compact('empleadosSemana', 'empleadosMes', 'empresa'));
+
+    }
+
     public function entrada(Request $request)
     {
+        $trabajador = Trabajador::where('user_id', auth()->id())->first();
+
+        $existe_fichaje = Fichaje::where('trabajador_id', $trabajador->id)
+            ->whereDate('hora_entrada', \Carbon\Carbon::parse($request->hora_entrada)->toDateString())
+            ->first();
+
+
+        if ($existe_fichaje) {
+            return back()->with(['error' => 'Ya has fichado hoy.']);
+        }
+
         $trabajador = Trabajador::where('user_id', auth()->id())->first();
 
         $fichaje = Fichaje::create([
@@ -31,6 +60,12 @@ class FichajeController extends Controller
             'hora_entrada' => now(),
         ]);
         return redirect()->route('trabajador.dashboard')->with('success', 'Entrada registrada correctamente.');
+
+        if ($fichaje) {
+            return redirect()->route('trabajador.dashboard')->with('success', 'Fichaje confirmado correctamente.');
+        } else {
+            return redirect()->route('trabajador.dashboard')->with('error', 'Error al guardar el fichaje.');
+        }
     }
 
 
@@ -115,7 +150,7 @@ class FichajeController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        
     }
 
     /**

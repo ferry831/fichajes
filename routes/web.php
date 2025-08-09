@@ -9,6 +9,7 @@ use App\Http\Controllers\TrabajadorController;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\Admin\EmpresaController as AdminEmpresaController;
 use App\Http\Controllers\FichajeController;
+use App\Http\Controllers\IncidenciaController;
 
 // Página de inicio pública
 Route::get('/', function () {
@@ -59,16 +60,12 @@ Route::prefix('empresa')
 
         // Gestión de trabajadores (RESTful, anidado)
         Route::resource('trabajadores', TrabajadorController::class);
+        // Gestión de fichajes (RESTful, anidado)
+        Route::get('fichajes', [FichajeController::class, 'indexEmpresa'])->name('fichajes.index');
 
-        // Fichajes de un trabajador (RESTful anidado)
-        Route::get('trabajadores/{trabajador}/fichajes', [FichajeController::class, 'index'])->name('trabajadores.fichajes.index');
-        Route::get('trabajadores/{trabajador}/fichajes/{fichaje}/editar', [FichajeController::class, 'edit'])->name('trabajadores.fichajes.edit');
-        Route::put('trabajadores/{trabajador}/fichajes/{fichaje}', [FichajeController::class, 'update'])->name('trabajadores.fichajes.update');
-        Route::delete('trabajadores/{trabajador}/fichajes/{fichaje}', [FichajeController::class, 'destroy'])->name('trabajadores.fichajes.destroy');
-
-        // // (Opcional) Incidencias/solicitudes de regularización
-        // Route::get('incidencias', [IncidenciaController::class, 'index'])->name('incidencias.index');
-        // Route::post('incidencias/{id}/resolver', [IncidenciaController::class, 'resolver'])->name('incidencias.resolver');
+        // Incidencias
+        Route::get('incidencias', [IncidenciaController::class, 'index'])->name('incidencias.index');
+        Route::patch('incidencias/{incidencia}', [IncidenciaController::class, 'update'])->name('incidencias.update');
     });
 
 
@@ -78,8 +75,10 @@ Route::middleware(['auth', CheckPerfil::class . ':trabajador'])->group(function 
 });
 
 Route::get('/trabajador/fichajes', [FichajeController::class, 'index'])->name('trabajador.fichajes.index');
-
+Route::get('/trabajador/incidencias', [IncidenciaController::class, 'create'])->name('trabajador.incidencias.create');
+Route::post('/trabajador/incidencias', [IncidenciaController::class, 'store'])->name('trabajador.incidencias.store');
 // Rutas de fichajes para el trabajador
+
 Route::post('/fichajes/entrada', [FichajeController::class, 'entrada'])->name('fichajes.entrada');
 Route::post('/fichajes/salida/{id}', [FichajeController::class, 'salida'])->name('fichajes.salida');
 Route::post('/fichajes/reanudar/{id}', [FichajeController::class, 'reanudar'])->name('fichajes.reanudar');

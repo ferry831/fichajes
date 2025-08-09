@@ -31,10 +31,10 @@
                              <x-nav-link :href="route('empresa.trabajadores.index')" :active="request()->routeIs('empresa.trabajadores.index')">
                                 {{ __('Trabajadores') }}
                             </x-nav-link>
-                            <x-nav-link :href="route('empresa.info.show')" :active="request()->routeIs('empresa.info.*')">
+                            <x-nav-link :href="route('empresa.fichajes.index')" :active="request()->routeIs('empresa.fichajes.*')">
                                 {{ __('Fichajes') }}
                             </x-nav-link>
-                            <x-nav-link :href="route('empresa.info.show')" :active="request()->routeIs('empresa.info.*')">
+                            <x-nav-link :href="route('empresa.incidencias.index')" :active="request()->routeIs('empresa.incidencias.*')">
                                 {{ __('Incidencias') }}
                             </x-nav-link>
                         @endif
@@ -42,10 +42,13 @@
                     @auth
                         @if(Auth::user()->perfil === 'trabajador')
                             <x-nav-link :href="route('trabajador.dashboard')" :active="request()->routeIs('trabajador.dashboard')">
-                                {{ __('Dashboard Trabajador') }}
+                                {{ __('Fichaje') }}
                             </x-nav-link>
                             <x-nav-link :href="route('trabajador.fichajes.index')" :active="request()->routeIs('trabajador.fichajes.*')">
-                                {{ __('Fichajes') }}
+                                {{ __('Historial') }}
+                            </x-nav-link>
+                            <x-nav-link :href="route('trabajador.incidencias.create')" :active="request()->routeIs('trabajador.incidencias.*')">
+                                {{ __('Incidencias') }}
                             </x-nav-link>
                          
                         @endif

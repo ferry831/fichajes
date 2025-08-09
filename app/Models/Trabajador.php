@@ -26,4 +26,9 @@ class Trabajador extends Model
     {
         return $this->hasMany(Fichaje::class);
     }
+
+    public function incidencias()
+    {
+        return $this->hasMany(Incidencia::class);
+    }
 }

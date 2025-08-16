@@ -18,7 +18,7 @@
                             <th class="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Fecha final</th>
                             <th class="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Tipo</th>
                             <th class="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Subtipo</th>
-                            <th class="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Observaciones</th>
+                            <th class="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider max-w-xs">Observaciones</th>
                             <th class="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Acciones</th>
                         </tr>
                     </thead>
@@ -43,7 +43,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $incidencia->tipo }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $incidencia->subtipo }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $incidencia->observacion }}</td>
+                                <td class="px-6 py-4 max-w-xs break-words overflow-hidden">{{ $incidencia->observacion }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                   
                                 

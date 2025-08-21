@@ -28,6 +28,7 @@
                         <th class="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Horas Contratadas</th>
                         <th class="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Horas trabajadas</th>
                         <th class="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Diferencia</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Historial</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -55,6 +56,9 @@
                                 @endphp
                                 {{ round($diferencia, 2) }} h
                             </td>
+                            <td class ="px-6 py-4 whitespace-nowrap">
+                                <a href="{{ route('empresa.fichajes.show', $empleado->id) }}" class="text-blue-600 hover:underline">Ver historial</a>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -69,6 +73,7 @@
                         <th class="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Horas Contratadas</th>
                         <th class="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Horas trabajadas</th>
                         <th class="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Diferencia</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Historial</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -95,6 +100,9 @@
                                     $diferencia = $empleado->horas - $totalHoras;
                                 @endphp
                                 {{ round($diferencia, 2) }} h
+                            </td>
+                            <td class ="px-6 py-4 whitespace-nowrap">
+                                <a href="{{ route('empresa.fichajes.show', $empleado->id) }}" class="text-blue-600 hover:underline">Ver historial</a>
                             </td>
                         </tr>
                     @endforeach

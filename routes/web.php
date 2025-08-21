@@ -62,6 +62,7 @@ Route::prefix('empresa')
         Route::resource('trabajadores', TrabajadorController::class);
         // Gestión de fichajes (RESTful, anidado)
         Route::get('fichajes', [FichajeController::class, 'indexEmpresa'])->name('fichajes.index');
+        Route::get('fichajes/{trabajador}', [FichajeController::class, 'show'])->name('fichajes.show');
 
         // Incidencias
         Route::get('incidencias', [IncidenciaController::class, 'index'])->name('incidencias.index');

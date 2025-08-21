@@ -140,9 +140,27 @@ class FichajeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id, Request $request)
     {
-        //
+        $trabajador = Trabajador::find($id);
+        $empresa = Empresa::where('user_id', auth()->id())->first();
+
+        if ($trabajador->empresa_id !== $empresa->id) {
+            abort(403);
+        }
+        
+        $query = $trabajador->fichajes()->orderBy('fecha', 'desc');
+
+        if ($request->filled('fecha_inicio')) {
+            $query->where('fecha', '>=', $request->input('fecha_inicio'));
+        }
+        if ($request->filled('fecha_fin')) {
+            $query->where('fecha', '<=', $request->input('fecha_fin'));
+        }
+        
+        $fichajes = $query->paginate(10);
+        return view('empresa.fichajes.show', compact('fichajes', 'trabajador'));
+
     }
 
     /**

@@ -7,6 +7,9 @@ use App\Models\Trabajador;
 use App\Models\Fichaje;
 use App\Models\Pausa;
 use App\Models\Empresa;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\FichajesExport;
 
 class FichajeController extends Controller
 {
@@ -163,6 +166,34 @@ class FichajeController extends Controller
 
     }
 
+
+    public function exportPdf(Trabajador $trabajador, Request $request){
+        $empresa = Empresa::where('user_id', auth()->id())->first();
+        if (!$empresa || $trabajador->empresa_id !== $empresa->id) {
+            abort(403);
+        }
+
+        $query = $trabajador->fichajes()->orderBy('fecha', 'desc');
+        if ($request->filled('fecha_inicio')) {
+            $query->where('fecha', '>=', $request->input('fecha_inicio'));
+        }
+        if ($request->filled('fecha_fin')) {
+            $query->where('fecha', '<=', $request->input('fecha_fin'));
+        }
+        $fichajes = $query->get();
+
+        $pdf = Pdf::loadView('empresa.fichajes.pdf', compact('trabajador', 'fichajes'));
+        return $pdf->download('fichajes_'.$trabajador->nombre.'.pdf');
+    }
+
+    public function exportExcel(Trabajador $trabajador, Request $request)
+    {
+        $empresa = Empresa::where('user_id', auth()->id())->first();
+        if (!$empresa || $trabajador->empresa_id !== $empresa->id) {
+            abort(403);
+        }
+        return Excel::download(new FichajesExport($trabajador, $request), 'fichajes_'.$trabajador->nombre.'.xlsx');
+    }
     /**
      * Show the form for editing the specified resource.
      */

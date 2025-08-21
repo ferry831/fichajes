@@ -1,34 +1,21 @@
-<x-app-layout>
-   <x-slot name="header">
-        
-        
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Gestiona los fichajes de :nombre', ['nombre' => $trabajador->nombre]) }}
-        </h2>
-        
-    </x-slot>
+<style>
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    table, th, td {
+        font-family: Arial, Helvetica, sans-serif;
+    }
 
-    
+</style>
 
-    <div class="py-6">
-        
-        <div class="max-w-7xl mx-auto min-w-full px-4 sm:px-5 lg:px-5">
-            
-            <div class="mb-4">
-                <form method="GET" action="{{ route('empresa.fichajes.show', $trabajador) }}" class="flex items-center space-x-2">
-                    <input type="date" name="fecha_inicio" value="{{ request('fecha_inicio') }}" placeholder="Buscar por Fecha Inicio..." class="border border-gray-300 rounded-lg px-4 py-2 w-full" />
-                    <input type="date" name="fecha_fin" value="{{ request('fecha_fin') }}" placeholder="Buscar por Fecha Fin..." class="border border-gray-300 rounded-lg px-4 py-2 w-full" />
-                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Buscar</button>
-                    <a href="{{ route('empresa.fichajes.export.pdf', ['trabajador' => $trabajador, 'fecha_inicio' => request('fecha_inicio'), 'fecha_fin' => request('fecha_fin')]) }}" class="bg-red-600 text-white text-center px-4 py-2 rounded hover:bg-red-700 min-w-[150px]">
-                        Exportar a PDF
-                    </a>
-                    <a href="{{ route('empresa.fichajes.export.excel', ['trabajador' => $trabajador, 'fecha_inicio' => request('fecha_inicio'), 'fecha_fin' => request('fecha_fin')]) }}" class="bg-green-600 text-white text-center px-4 py-2 rounded hover:bg-green-700 min-w-[150px]">
-                        Exportar a Excel
-                    </a>
-                </form>
-            </div>
-            <div class="overflow-x-auto bg-white shadow-md rounded-lg">
-                <table class="min-w-full divide-y divide-gray-400">
+<table width="100%" style="margin-bottom: 16px; font-size: x-small;">
+    <tr>
+        <td align="left">{{ \Carbon\Carbon::now()->format('d/m/Y H:i') }}</td>
+        <td align="right">{{ $trabajador->empresa->razon_social }}</td>
+    </tr>
+</table>
+<h2> Fichajes de {{ $trabajador->nombre }}</h2>
+<table class="min-w-full divide-y divide-gray-400">
                     <thead class="bg-gray-100">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Fecha</th>
@@ -98,16 +85,3 @@
                         @endforeach
                     </tbody>
                 </table>
-               
-            </div>
-            <div class="mt-4">
-                {{ $fichajes->links() }}
-            </div>
-            <div class="mt-4">
-                <a href="{{ route('empresa.fichajes.index') }}" class="inline-block mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-                    ← Volver
-                </a>
-            </div>
-        </div>
-    </div>
-</x-app-layout>

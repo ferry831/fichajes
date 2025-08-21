@@ -63,6 +63,8 @@ Route::prefix('empresa')
         // Gestión de fichajes (RESTful, anidado)
         Route::get('fichajes', [FichajeController::class, 'indexEmpresa'])->name('fichajes.index');
         Route::get('fichajes/{trabajador}', [FichajeController::class, 'show'])->name('fichajes.show');
+        Route::get('fichajes/{trabajador}/export/pdf', [FichajeController::class, 'exportPdf'])->name('fichajes.export.pdf');
+        Route::get('fichajes/{trabajador}/export/excel', [FichajeController::class, 'exportExcel'])->name('fichajes.export.excel');
 
         // Incidencias
         Route::get('incidencias', [IncidenciaController::class, 'index'])->name('incidencias.index');

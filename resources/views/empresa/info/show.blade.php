@@ -7,7 +7,7 @@
 
     <div class="py-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-white shadow-md rounded-lg p-6">
+            <div class="bg-white shadow-md rounded-lg p-6 max-w-xl mx-auto">
                 <h3 class="text-lg font-semibold mb-4">Información de la Empresa</h3>
                 <div class="mb-4">
                     <strong>Razón Social:</strong> {{ $empresa->razon_social }}

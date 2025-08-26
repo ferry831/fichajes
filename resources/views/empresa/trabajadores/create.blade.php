@@ -6,8 +6,8 @@
     </x-slot>
 
     <div class="py-6">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-white shadow-md rounded-lg p-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
+            <div class="bg-white shadow-md rounded-lg p-6 max-w-md mx-auto">
                 <h3 class="text-lg font-semibold mb-4">Añadir información del trabajador</h3>
                 <form action="{{ route('empresa.trabajadores.store') }}" method="POST" class="space-y-4">
                     @if ($errors->any())
@@ -37,29 +37,35 @@
                         @error('trabajador_email')
                             <span class="text-red-600 text-sm">{{ $message }}</span>
                         @enderror
-
-                        <label class="block font-semibold mb-1 mt-4" for="nif">Horas:</label>
+                        <div class="flex flex-row space-x-4">
+                            <div class="w-1/2">
+                                <label class="block font-semibold mb-1 mt-4" for="pin">PIN:</label>
+                                <input type="password" name="pin" id="pin" class="border border-gray-300 rounded-lg px-4 py-2 w-full" required minlength="4" maxlength="4"
+                                oninvalid="this.setCustomValidity('El PIN debe tener exactamente 4 caracteres')">
+                                @error('pin')
+                                    <span class="text-red-600 text-sm">{{ $message }}</span>
+                                @enderror                                
+                            </div>
+                            <div class="w-1/2">
+                            <label class="block font-semibold mb-1 mt-4" for="pin_confirmation">Confirmar PIN:</label>
+                                <input type="password" name="pin_confirmation" id="pin_confirmation" class="border border-gray-300 rounded-lg px-4 py-2 w-full" required minlength="4" maxlength="4">
+                                @if ($errors->has('pin_confirmation'))
+                                    @if (str_contains($errors->first('pin_confirmation'), 'confirmation'))
+                                        <span class="text-red-600 text-sm">El PIN no coincide con el anterior.</span>
+                                    @else
+                                        <span class="text-red-600 text-sm">{{ $errors->first('pin') }}</span>
+                                    @endif
+                                @endif
+                            </div>
+                        </div>
+                    
+                        <label class="block font-semibold mb-1 mt-4" for="nif">Horas Semanales</label>
                         <input type="text" name="horas" id="horas" class="border border-gray-300 rounded-lg px-4 py-2 w-full" required min="0" max="168">
                         @error('horas')
                             <span class="text-red-600 text-sm">{{ $message }}</span>
                         @enderror
 
-                        <label class="block font-semibold mb-1 mt-4" for="pin">PIN:</label>
-                        <input type="password" name="pin" id="pin" class="border border-gray-300 rounded-lg px-4 py-2 w-full" required minlength="4" maxlength="4"
-                        oninvalid="this.setCustomValidity('El PIN debe tener exactamente 4 caracteres')">
-                        @error('pin')
-                            <span class="text-red-600 text-sm">{{ $message }}</span>
-                        @enderror
-
-                        <label class="block font-semibold mb-1 mt-4" for="pin_confirmation">Confirmar PIN:</label>
-                        <input type="password" name="pin_confirmation" id="pin_confirmation" class="border border-gray-300 rounded-lg px-4 py-2 w-full" required minlength="4" maxlength="4">
-                        @if ($errors->has('pin_confirmation'))
-                            @if (str_contains($errors->first('pin_confirmation'), 'confirmation'))
-                                <span class="text-red-600 text-sm">El PIN no coincide con el anterior.</span>
-                            @else
-                                <span class="text-red-600 text-sm">{{ $errors->first('pin') }}</span>
-                            @endif
-                        @endif
+                        
 
                     </div>
 

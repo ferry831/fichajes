@@ -7,7 +7,7 @@
 
     <div class="py-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-white shadow-md rounded-lg p-6">
+            <div class="bg-white shadow-md rounded-lg p-6 max-w-xl mx-auto">
                 <h3 class="text-lg font-semibold mb-4">Editar información de la Empresa</h3>
                 <form action="{{ route('empresa.info.update', $empresa) }}" method="POST" class="space-y-4">
                     @csrf

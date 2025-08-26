@@ -28,35 +28,37 @@
                 </form>
             </div>
             <div class="overflow-x-auto bg-white shadow-md rounded-lg">
-                <table class="min-w-full divide-y divide-gray-400">
+                <table class="min-w-full table-fixed divide-y divide-gray-400 ">
                     <thead class="bg-gray-100">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Fecha</th>
-                            <th class="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Entrada</th>
-                            <th class="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Pausas</th>
-                            <th class="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Duración</th>
-                            <th class="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Salida</th>
-                            <th class="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Total</th>
+                            <th class="w-24 py-3 px-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Fecha</th>
+                            <th class="w-24 py-3 px-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Entrada</th>
+                            <th class="w-24 py-3 px-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Pausas</th>
+                            <th class="w-24 py-3 px-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Duración</th>
+                            <th class="w-24 py-3 px-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Salida</th>
+                            <th class="w-24 py-3 px-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Total</th>
+                            <th class="w-24 py-3 px-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Requeridas</th>
+                            <th class="w-24 py-3 px-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Extras</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @foreach($fichajes as $fichaje)
                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    {{ $fichaje->fecha ? ucfirst(\Carbon\Carbon::parse($fichaje->fecha)->locale('es')->isoFormat('dddd, D [de] MMMM [de] YYYY')) : '' }}
+                                <td class="px-3 py-4 whitespace-nowrap">
+                                    {{ $fichaje->fecha ? ucfirst(\Carbon\Carbon::parse($fichaje->fecha)->locale('es')->isoFormat('D-MM-YYYY')) : '' }}
                                 </td>
 
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-3 py-4 whitespace-nowrap">
                                     {{ $fichaje->hora_entrada ? \Carbon\Carbon::parse($fichaje->hora_entrada)->format('H:i') : '' }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-3 py-4 whitespace-nowrap">
                                     {{ $fichaje->pausas ? $fichaje->pausas->count() : 0 }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-3 py-4 whitespace-nowrap">
                                     @php
                                         $duracionTotalSegundos = 0;
-                                        foreach($fichaje->pausas as $pausa) {
-                                            if($pausa->inicio && $pausa->fin) {
+                                        foreach ($fichaje->pausas as $pausa) {
+                                            if ($pausa->inicio && $pausa->fin) {
                                                 $duracionTotalSegundos += \Carbon\Carbon::parse($pausa->inicio)->diffInSeconds(\Carbon\Carbon::parse($pausa->fin));
                                             }
                                         }
@@ -70,10 +72,10 @@
                                     @endif
                                 </td>
 
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-3 py-4 whitespace-nowrap">
                                     {{ $fichaje->hora_salida ? \Carbon\Carbon::parse($fichaje->hora_salida)->format('H:i') : '' }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-3 py-4 whitespace-nowrap">
                                     @if ($fichaje->hora_entrada && $fichaje->hora_salida)
                                         @php
                                             $entrada = \Carbon\Carbon::parse($fichaje->hora_entrada);
@@ -85,15 +87,35 @@
                                                 $total -= $pausa;
                                             }
                                             // Convierte a horas y minutos
-                                            $horas = floor($total / 60);
-                                            $minutos = $total % 60;
+                                            $horas_decimales = round($total / 60, 2);
+
                                         @endphp
-                                        {{ $horas }} h {{ $minutos }} min
+                                        {{ $horas_decimales }} h
                                     @else
                                         -
                                     @endif
                                 </td>
-                                
+                                <td class="px-3 py-4 whitespace-nowrap">
+                                    {{ $trabajador->horas / 5 }} h
+                                </td>
+                                <td class="px-3 py-4 whitespace-nowrap">
+                                    @if ($fichaje->hora_entrada && $fichaje->hora_salida)
+                                        @php
+                                            
+                                            $horas_requeridas = $trabajador->horas / 5;
+                                            $horas_extra = $horas_decimales - $horas_requeridas;
+                                            
+                                        @endphp
+                                        @if($horas_extra > 0)
+                                            {{ round($horas_extra, 2) }} h
+                                        @else
+                                            0
+                                        @endif
+                                    
+                                    @endif
+                                    
+                                </td>
+
                             </tr>
                         @endforeach
                     </tbody>

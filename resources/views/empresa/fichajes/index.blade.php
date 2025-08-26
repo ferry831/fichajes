@@ -36,23 +36,23 @@
 
                     @foreach($empleadosMes as $empleado)
                         @php
-                            $totalHoras = 0;
+                            $totalHorasMes = 0;
                             foreach ($empleado->fichajes as $fichaje) {
                                 if ($fichaje->hora_entrada && $fichaje->hora_salida) {
                                     $entrada = \Carbon\Carbon::parse($fichaje->hora_entrada);
                                     $salida = \Carbon\Carbon::parse($fichaje->hora_salida);
-                                    $totalHoras += $entrada->diffInMinutes($salida) / 60; // Suma en horas
+                                    $totalHorasMes += $entrada->diffInMinutes($salida) / 60; // Suma en horas
                                 }
                             }
                         @endphp
                         <tr>
                             <td class="px-6 py-4 whitespace-nowrap">{{ $empleado->nombre }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ $empleado->horas * 4 }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ round($totalHoras, 2) }} h</td>
-                            <td class="px-6 py-4 whitespace-nowrap @if($empleado->horas < $totalHoras) text-green-600 @elseif($empleado->horas > $totalHoras) text-red-600 @else text-gray-600 @endif">
+                            <td class="px-6 py-4 whitespace-nowrap">{{ round($totalHorasMes, 2) }} h</td>
+                            <td class="px-6 py-4 whitespace-nowrap @if($empleado->horas*4 < $totalHorasMes) text-green-600 @elseif($empleado->horas*4 > $totalHorasMes) text-red-600 @else text-gray-600 @endif">
                                 {{-- Calcula la diferencia entre horas contratadas y trabajadas --}}
                                 @php
-                                    $diferencia = $empleado->horas*4 - $totalHoras;
+                                    $diferencia = $empleado->horas*4 - $totalHorasMes;
                                 @endphp
                                 {{ round($diferencia, 2) }} h
                             </td>
@@ -81,23 +81,23 @@
 
                     @foreach($empleadosSemana as $empleado)
                         @php
-                            $totalHoras = 0;
+                            $totalHorasSemana = 0;
                             foreach ($empleado->fichajes as $fichaje) {
                                 if ($fichaje->hora_entrada && $fichaje->hora_salida) {
                                     $entrada = \Carbon\Carbon::parse($fichaje->hora_entrada);
                                     $salida = \Carbon\Carbon::parse($fichaje->hora_salida);
-                                    $totalHoras += $entrada->diffInMinutes($salida) / 60; // Suma en horas
+                                    $totalHorasSemana += $entrada->diffInMinutes($salida) / 60; // Suma en horas
                                 }
                             }
                         @endphp
                         <tr>
                             <td class="px-6 py-4 whitespace-nowrap">{{ $empleado->nombre }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ $empleado->horas }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ round($totalHoras, 2) }} h</td>
-                            <td class="px-6 py-4 whitespace-nowrap @if($empleado->horas < $totalHoras) text-green-600 @elseif($empleado->horas > $totalHoras) text-red-600 @else text-gray-600 @endif">
+                            <td class="px-6 py-4 whitespace-nowrap">{{ round($totalHorasSemana, 2) }} h</td>
+                            <td class="px-6 py-4 whitespace-nowrap @if($empleado->horas < $totalHorasSemana) text-green-600 @elseif($empleado->horas > $totalHorasSemana) text-red-600 @else text-gray-600 @endif">
                                 {{-- Calcula la diferencia entre horas contratadas y trabajadas --}}
                                 @php
-                                    $diferencia = $empleado->horas - $totalHoras;
+                                    $diferencia = $empleado->horas - $totalHorasSemana;
                                 @endphp
                                 {{ round($diferencia, 2) }} h
                             </td>

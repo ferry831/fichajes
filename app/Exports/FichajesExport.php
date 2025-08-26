@@ -5,8 +5,9 @@ namespace App\Exports;
 use Maatwebsite\Excel\Concerns\FromView;
 use App\Models\Trabajador;
 use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\WithColumnWidths;
 
-class FichajesExport implements FromView
+class FichajesExport implements FromView, WithColumnWidths
 {
     protected $trabajador;
     protected $request;
@@ -15,6 +16,20 @@ class FichajesExport implements FromView
     {
         $this->trabajador = $trabajador;
         $this->request = $request;
+    }
+
+    public function columnWidths(): array
+    {
+        return [
+            'A' => 15, 
+            'B' => 15, 
+            'C' => 15, 
+            'D' => 15, 
+            'E' => 15, 
+            'F' => 15, 
+            'G' => 15, 
+            'H' => 15, 
+        ];
     }
 
     public function view(): View

@@ -173,26 +173,42 @@ class FichajeController extends Controller
             abort(403);
         }
 
-        $query = $trabajador->fichajes()->orderBy('fecha', 'desc');
+        //Aquí se obtienen los fichajes del trabajador entre la fecha_inicio y fecha_fin seleccionadas.
+        $fichajesQuery = $trabajador->fichajes()->orderBy('fecha', 'desc');
         if ($request->filled('fecha_inicio')) {
-            $query->where('fecha', '>=', $request->input('fecha_inicio'));
+            $fichajesQuery->where('fecha', '>=', $request->input('fecha_inicio'));
         }
         if ($request->filled('fecha_fin')) {
-            $query->where('fecha', '<=', $request->input('fecha_fin'));
+            $fichajesQuery->where('fecha', '<=', $request->input('fecha_fin'));
         }
-        $fichajes = $query->get();
+        $fichajes = $fichajesQuery->get();
 
-        $pdf = Pdf::loadView('empresa.fichajes.pdf', compact('trabajador', 'fichajes'));
+        //Obtención de las incidencias del trabajador entre las fechas seleccionadas.
+        $incidenciasQuery = $trabajador->incidencias()->orderBy('fecha_inicio', 'desc');
+        if ($request->filled('fecha_inicio')) {
+            $incidenciasQuery->where('fecha_inicio', '>=', $request->input('fecha_inicio'));
+        }
+        if ($request->filled('fecha_fin')) {
+            $incidenciasQuery->where('fecha_fin', '<=', $request->input('fecha_fin'));
+        }
+        $incidencias = $incidenciasQuery->get();
+
+        
+
+        $pdf = Pdf::loadView('empresa.fichajes.pdf', compact('trabajador', 'fichajes', 'incidencias'));
         return $pdf->download('fichajes_'.$trabajador->nombre.'.pdf');
     }
 
     public function exportExcel(Trabajador $trabajador, Request $request)
     {
+
         $empresa = Empresa::where('user_id', auth()->id())->first();
         if (!$empresa || $trabajador->empresa_id !== $empresa->id) {
             abort(403);
         }
-        return Excel::download(new FichajesExport($trabajador, $request), 'fichajes_'.$trabajador->nombre.'.xlsx');
+        $incidencias = $trabajador->incidencias()->orderBy('fecha_inicio', 'desc')->get();
+
+        return Excel::download(new FichajesExport($trabajador,  $request), 'fichajes_'.$trabajador->nombre.'.xlsx');
     }
     /**
      * Show the form for editing the specified resource.

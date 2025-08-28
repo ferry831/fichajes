@@ -64,10 +64,12 @@
                                 <option value="correccion_fichaje">Corrección de fichaje</option>
                             </select>
 
-                        <x-input-label for="fecha_inicio" value="Fecha inicio" />
-                        <input type="datetime-local" id="fecha_inicio" name="fecha_inicio" class="block w-full mt-1 rounded" />
-                        <x-input-label for="fecha_fin" value="Fecha fin" class="mt-2" />
-                        <input type="datetime-local" id="fecha_fin" name="fecha_fin" class="block w-full mt-1 rounded" />
+                        <x-input-label for="fecha" value="Fecha" />
+                        <input type="date" id="fecha" name="fecha" class="block w-full mt-1 rounded" />
+                        <x-input-label for="hora_entrada" value="Hora entrada" class="mt-2" />
+                        <input type="time" id="hora_entrada" name="hora_entrada" class="block w-full mt-1 rounded" />
+                        <x-input-label for="hora_salida" value="Hora salida" class="mt-2" />
+                        <input type="time" id="hora_salida" name="hora_salida" class="block w-full mt-1 rounded" />
 
                     </div>
 

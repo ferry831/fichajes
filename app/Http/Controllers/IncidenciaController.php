@@ -31,36 +31,43 @@ class IncidenciaController extends Controller
                 $subtipo = $request->input('subtipo_fichaje');
                 if ($subtipo === 'fichaje_olvidado') {
                     $request->validate([
-                        'fecha_inicio' => 'required|date',
-                        'fecha_fin' => 'required|date|after:fecha_inicio',
+                        'fecha' => 'required|date',
+                        'hora_entrada' => 'required|date_format:H:i|',
+                        'hora_salida' => 'required|date_format:H:i|after:hora_entrada'
                     ]);
 
-                    
+                    $fecha_inicio = \Carbon\Carbon::parse($request->input('fecha') . ' ' . $request->input('hora_entrada'));
+                    $fecha_salida = \Carbon\Carbon::parse($request->input('fecha') . ' ' . $request->input('hora_salida'));
+
                     $incidencia = new Incidencia();
                     $incidencia->trabajador_id = $trabajador->id;
                     $incidencia->empresa_id = $empresa_id;
                     $incidencia->tipo = $tipo;
                     $incidencia->subtipo = $subtipo;
-                    $incidencia->fecha_inicio = $request->input('fecha_inicio');
-                    $incidencia->fecha_fin = $request->input('fecha_fin');
+                    $incidencia->fecha_inicio = $fecha_inicio;
+                    $incidencia->fecha_fin = $fecha_salida;
                     $incidencia->observacion = $request->input('observaciones') ?? null;
                     $incidencia->estado = 'pendiente';
                     $incidencia->save();
                 } 
                 elseif ($subtipo === 'correccion_fichaje') {
                     $request->validate([
-                        'fecha_inicio' => 'required|date',
-                        'fecha_fin' => 'required|date|after:fecha_inicio',
+                        'fecha' => 'required|date',
+                        'hora_entrada' => 'required|date_format:H:i|',
+                        'hora_salida' => 'required|date_format:H:i|after:hora_entrada',
                     ]);
 
                     // Buscar fichaje en el día de fecha_inicio
                     $fichaje = Fichaje::where('trabajador_id', $trabajador->id)
-                        ->whereDate('hora_entrada', \Carbon\Carbon::parse($request->fecha_inicio)->toDateString())
+                        ->whereDate('fecha', \Carbon\Carbon::parse($request->fecha)->toDateString())
                         ->first();
 
                     if (!$fichaje) {
-                        return back()->withErrors(['fecha_inicio' => 'No existe un fichaje en esa fecha.']);
+                        return back()->withErrors(['fecha' => 'No existe un fichaje en esa fecha.']);
                     }
+
+                    $fecha_inicio = \Carbon\Carbon::parse($request->input('fecha') . ' ' . $request->input('hora_entrada'));
+                    $fecha_salida = \Carbon\Carbon::parse($request->input('fecha') . ' ' . $request->input('hora_salida'));
 
                     $incidencia = new Incidencia();
                     $incidencia->trabajador_id = $trabajador->id;
@@ -68,8 +75,8 @@ class IncidenciaController extends Controller
                     $incidencia->tipo = $tipo;
                     $incidencia->subtipo = $subtipo;
                     $incidencia->fichaje_id = $fichaje->id;
-                    $incidencia->fecha_inicio = $request->input('fecha_inicio');
-                    $incidencia->fecha_fin = $request->input('fecha_fin');
+                    $incidencia->fecha_inicio = $fecha_inicio;
+                    $incidencia->fecha_fin = $fecha_salida;
                     $incidencia->observacion = $request->input('observaciones') ?? null;
                     $incidencia->estado = 'pendiente';
                     $incidencia->save();
@@ -140,16 +147,21 @@ class IncidenciaController extends Controller
 
         // 3. Carga los trabajadores de la empresa
         $trabajadores = $empresa ? $empresa->trabajadores()->get() : collect();
+        $trabajadoresIds = $trabajadores->pluck('id')->toArray();
         
 
         // 4. Junta todas las incidencias pendientes
-        $incidencias = $trabajadores->flatMap(function ($trabajador) {
-            return $trabajador->incidencias()->where('estado', 'pendiente')->get();
-        });
-        
-        $incidencias = $incidencias->sortBy('fecha_inicio')->values();
+        $incidenciasPendientes = Incidencia::whereIn('trabajador_id', $trabajadoresIds)
+            ->where('estado', 'pendiente')
+            ->orderBy('fecha_inicio')
+            ->paginate(10, ['*'], 'pendientes');
+
+        $incidenciasHistorial = Incidencia::whereIn('trabajador_id', $trabajadoresIds)
+            ->whereIn('estado', ['aprobada', 'rechazada'])
+            ->orderByDesc('fecha_inicio')
+            ->paginate(10, ['*'], 'historial');
         // 5. Muestra la vista
-        return view('empresa.incidencias.index', compact('trabajadores', 'incidencias'));
+        return view('empresa.incidencias.index', compact('trabajadores', 'incidenciasPendientes', 'incidenciasHistorial'));
     }
 
     public function update(Request $request, Incidencia $incidencia)

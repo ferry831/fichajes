@@ -80,6 +80,10 @@
                         @endforeach
                     </tbody>
                 </table>
+                 
+            </div>
+            <div class="mt-2">
+                {{ $fichajes->links() }}
             </div>
         </div>
     </div>

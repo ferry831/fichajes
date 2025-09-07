@@ -21,7 +21,7 @@ class EmpresaFactory extends Factory
             'cif' => strtoupper($this->faker->bothify('?#######')),
             'direccion' => $this->faker->streetAddress,
             'ccc' => $this->faker->numerify('###########'),
-            'activa' => false, // 80% chance of being true
+            'activa' => false, 
             'user_id' => \App\Models\User::factory()->state(['perfil' => 'empresa']),
         ];        
     }

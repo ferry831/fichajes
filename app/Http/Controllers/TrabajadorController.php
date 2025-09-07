@@ -14,11 +14,7 @@ class TrabajadorController extends Controller
 {
     public function dashboard()
     {   
-        $desactivar_comenzar = true;
-        $desactivar_pausar = true;
-        $desactivar_reanudar = true;
-        $desactivar_finalizar = true;
-
+        
 
         $trabajador = Trabajador::where('user_id', auth()->id())->first();
         $fichaje = $trabajador ? $trabajador->fichajes()->latest()->first() : null; // Obtiene el último fichaje del trabajador
@@ -28,10 +24,7 @@ class TrabajadorController extends Controller
                 'trabajador',
                 'fichaje',
                 'pausas',
-                'desactivar_comenzar',
-                'desactivar_pausar',
-                'desactivar_reanudar',
-                'desactivar_finalizar'
+               
             ));
 
     }

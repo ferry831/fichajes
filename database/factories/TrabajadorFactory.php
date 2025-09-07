@@ -24,7 +24,6 @@ class TrabajadorFactory extends Factory
         ]);
 
         return [
-            'empresa_id' => 1, // O el id que corresponda
             'user_id' => $user->id,
             'nombre' => $user->name,
             'email' => $user->email,

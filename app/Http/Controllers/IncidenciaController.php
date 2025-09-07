@@ -141,7 +141,7 @@ class IncidenciaController extends Controller
             abort(403, 'No tienes permisos para ver esta página.');
         }
 
-            // 2. Busca la empresa asociada al usuario
+        // 2. Busca la empresa asociada al usuario
         $empresa = Empresa::where('user_id', $user->id)->first();
         
 
@@ -154,11 +154,13 @@ class IncidenciaController extends Controller
         $incidenciasPendientes = Incidencia::whereIn('trabajador_id', $trabajadoresIds)
             ->where('estado', 'pendiente')
             ->orderBy('fecha_inicio')
+            ->with('trabajador')
             ->paginate(10, ['*'], 'pendientes');
 
         $incidenciasHistorial = Incidencia::whereIn('trabajador_id', $trabajadoresIds)
             ->whereIn('estado', ['aprobada', 'rechazada'])
             ->orderByDesc('fecha_inicio')
+            ->with('trabajador')
             ->paginate(10, ['*'], 'historial');
         // 5. Muestra la vista
         return view('empresa.incidencias.index', compact('trabajadores', 'incidenciasPendientes', 'incidenciasHistorial'));

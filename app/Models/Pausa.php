@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Pausa extends Model
 {
+    use HasFactory;
     protected $fillable = [
         'fichaje_id',
         'inicio',

@@ -9,7 +9,7 @@ return new class extends Migration {
         Schema::create('trabajadores', function (Blueprint $table) {
             $table->id();
             $table->foreignId('empresa_id')->constrained('empresas')->onDelete('cascade');
-            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade'); // <-- Añade esta línea
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade'); 
             $table->string('nombre');
             $table->string('email')->unique();
             $table->integer('horas')->nullable();

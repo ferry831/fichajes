@@ -31,4 +31,9 @@ class Trabajador extends Model
     {
         return $this->hasMany(Incidencia::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

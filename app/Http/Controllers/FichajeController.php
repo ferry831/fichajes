@@ -19,7 +19,7 @@ class FichajeController extends Controller
     public function index()
     {
         $trabajador = Trabajador::where('user_id', auth()->id())->first(); // Obtiene el trabajador asociado al usuario autenticado
-        $fichajes = $trabajador ? $trabajador->fichajes()->latest()->get() : collect(); // Si no hay trabajador, devuelve una colección vacía
+        $fichajes = $trabajador ? $trabajador->fichajes()->latest()->with('pausas')->paginate(10) : collect(); // Si no hay trabajador, devuelve una colección vacía
         return view('trabajador.fichajes.index', compact('fichajes', 'trabajador'));
 
     }
@@ -152,7 +152,7 @@ class FichajeController extends Controller
             abort(403);
         }
         
-        $query = $trabajador->fichajes()->orderBy('fecha', 'desc');
+        $query = $trabajador->fichajes()->with('pausas')->orderBy('fecha', 'desc');
 
         if ($request->filled('fecha_inicio')) {
             $query->where('fecha', '>=', $request->input('fecha_inicio'));
